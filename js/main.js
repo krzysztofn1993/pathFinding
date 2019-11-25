@@ -1,12 +1,13 @@
 let population;
-let noOfRockets = 50;
+let noOfRockets = 100;
 let count = 0;
 let generations = 0;
-let genes = 150;
+let genes = 160;
 let minP;
 let avgP;
 let maxP;
 let generationCount;
+let maxForce = 0.3;
 
 function setup() {
     createCanvas(640, 480);
@@ -32,9 +33,9 @@ function draw() {
         }
         count = 0;
         generations++;
-        minP.html('min: ' + population.minFitness);
-        avgP.html('avg: ' + population.avgFitness);
-        maxP.html('max: ' + population.maxFitness);
+        minP.html('min: ' + 1/population.minFitness);
+        avgP.html('avg: ' + 1/population.avgFitness);
+        maxP.html('max: ' + 1/population.maxFitness);
         generationCount.html('generation number: ' + generations);
     }
     count++

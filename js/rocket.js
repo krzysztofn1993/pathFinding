@@ -7,13 +7,23 @@ class Rocket {
         this.acc = createVector();
         this.vel = createVector();
         this.found = false;
-        this.vel.mult(0);
-        this.pos = createVector(width / 2, height * 0.8);
+        this.pos = createVector(width / 2, height * 0.6);
         this.count = genes;
+        this.crashed = false;
+    }
+
+    checkBoundaries() {
+        if (this.pos.x > width || this.pos.x < 0) {
+            this.crashed = true;
+        }
+
+        if (this.pos.y > height || this.pos.y < 0) {
+            this.crashed = true;
+        }
     }
 
     inTarget(target) {
-        if (p5.Vector.dist(this.pos, target) < 5 && !this.found) {
+        if (p5.Vector.dist(this.pos, target) < 5 && !this.found && !this.crashed) {
             this.count = count;
             this.pos = target;
             this.found = true;
@@ -24,14 +34,14 @@ class Rocket {
         let DNA = [];
         for (let index = 0; index < genes; index++) {
             DNA.push(p5.Vector.random2D());
-            DNA[index].limit(2);
+            DNA[index].setMag(maxForce);
         }
 
         return DNA;
     }
 
     update(index) {
-        if (!this.found) {
+        if (!this.found && !this.crashed) {
             this.acc.add(this.DNA[index]);
             this.vel.add(this.acc);
             this.pos.add(this.vel);
@@ -51,6 +61,7 @@ class Rocket {
 
     calculateDistance(target) {
         this.distance = p5.Vector.dist(this.pos, target);
+        this.distance = map(this.distance, 0, width, width, 0);
 
         return this.distance;
     }
