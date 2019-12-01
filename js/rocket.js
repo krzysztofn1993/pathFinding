@@ -13,7 +13,7 @@ class Rocket {
     }
 
     checkBoundaries() {
-        if (this.pos.x > width || this.pos.x < 0) {
+        if (this.pos.x > width || this.pos.x < 0 && !this.crashed) {
             this.crashed = true;
         }
 
@@ -61,8 +61,21 @@ class Rocket {
 
     calculateDistance(target) {
         this.distance = p5.Vector.dist(this.pos, target);
-        this.distance = map(this.distance, 0, width, width, 0);
+        this.distance = map(this.distance, 0, height, height, 0);
 
         return this.distance;
+    }
+
+    checkObstacles(obstacles) {
+        for (let index = 0; index < obstacles.length; index++) {
+            if (this.pos.x > obstacles[index].pos.x
+                && this.pos.x < obstacles[index].pos.x + obstacles[index].width
+                && this.pos.y > obstacles[index].pos.y
+                && this.pos.y < obstacles[index].pos.y + obstacles[index].height
+            ) {
+                this.crashed = true;
+                return;
+            }
+        }
     }
 }

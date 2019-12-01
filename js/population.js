@@ -10,13 +10,25 @@ class Population {
         this.parents = [];
         this.rocketsFitness = [];
         this.target = createVector(width / 4, height / 5);
+        this.obstacles = [
+            {
+                pos: createVector(75, 175),
+                width: 100,
+                height: 10,
+                selected: false,
+            },
+            {
+                pos: createVector(200, 55),
+                width: 10,
+                height: 100,
+                selected: false,
+            },
+        ]
     }
 
     behave() {
-        strokeWeight(10);
-        point(this.target.x, this.target.y);
-        strokeWeight(1);
         for (let iteration = 0; iteration < this.rockets.length; iteration++) {
+            this.rockets[iteration].checkObstacles(this.obstacles);
             this.rockets[iteration].checkBoundaries();
             this.rockets[iteration].inTarget(this.target);
             this.rockets[iteration].update(count);
@@ -36,18 +48,18 @@ class Population {
 
         for (let index = 0; index < this.rockets.length; index++) {
             let amountOfParents = this.rocketsFitness[index] * 100;
-            
+
             for (let iteration = 0; iteration < amountOfParents; iteration++) {
                 this.parents.push(this.rockets[index]);
             }
-            
+
         }
     }
 
     calculateFitnessOfPopulation() {
         for (let index = 0; index < this.rockets.length; index++) {
             this.rocketsFitness[index] = this.rockets[index].calculateDistance(this.target) + this.rockets[index].count;
-            if(this.rockets[index].crashed) {
+            if (this.rockets[index].crashed) {
                 this.rocketsFitness[index] *= 0.5;
             }
 
@@ -57,11 +69,11 @@ class Population {
         }
 
         this.maxFitness = Math.min(...this.rocketsFitness);
-        
+
         for (let index = 0; index < this.rockets.length; index++) {
             this.rocketsFitness[index] /= this.maxFitness;
         }
-        
+
         this.minFitness = Math.max(...this.rocketsFitness);
         this.avgFitness = this.rocketsFitness.reduce((a, b) => a += b) / this.rocketsFitness.length;
         this.maxFitness = Math.min(...this.rocketsFitness);
